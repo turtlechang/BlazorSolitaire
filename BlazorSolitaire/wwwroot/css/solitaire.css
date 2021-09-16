@@ -1,0 +1,39 @@
+﻿
+/* 抽牌堆 */
+solitaire-drawdeck {
+    height: 190px;
+    width: 140px;
+    float: left;
+}
+
+/* 除了第一個抽牌堆以外其他抽牌堆的"上邊界"及"左邊界"都會調整 */
+.solitaire-drawdeck:not(:first-child) {
+    margin-top: -190px;
+    margin-left: 10px;
+}
+
+/* 可以拖移時，則顯示綠色的虛線 */
+.solitaire-can-drop {
+    border: 2px dashed green;
+}
+
+/* 棄牌堆 */
+.solitaire-discards {
+    height: 190px;
+    width: 140px;
+    float: left;
+}
+
+    /* 除了第一個棄牌堆以外其他棄牌堆的"上邊界"及"左邊界"都會調整 */
+    .solitaire-discards:not(:first-child) {
+        margin-left: -110px;
+    }
+
+.solitaire-drawdeck {
+    width: 140px;
+    vertical-align: top;
+}
+
+.solitaire-stackpile:not(:first-child) {
+    margin-top: -130px;
+}

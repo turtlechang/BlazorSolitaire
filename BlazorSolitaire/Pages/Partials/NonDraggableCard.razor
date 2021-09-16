@@ -1,0 +1,26 @@
+﻿@using BlazorSolitaire.Models.Solitaire;
+
+
+@if (Card != null)
+{
+    @if (Card.IsVisible)
+    {
+    <img class="solitaire-discards"
+         src="images/common/@(Card.ImageName).png"
+         ondragstart="return false"
+         ondrop="return false" />
+    }
+    else
+    {
+    <img class="solitaire-discards"
+         src="images/common/cardBack.png"
+         ondragstart="return false"
+         ondrop="return false" />
+    }
+}
+
+
+@code {
+    [Parameter]
+    public Card Card { get; set; } 
+}

@@ -1,0 +1,11 @@
+﻿<div class="@CssClass" @onclick="ClickEvent">
+    <img src="images/solitaire/cardBack.png" />
+</div>
+
+@code {
+    [Parameter]
+    public string CssClass { get; set; }
+
+    [Parameter]
+    public EventCallback ClickEvent { get; set; }
+}

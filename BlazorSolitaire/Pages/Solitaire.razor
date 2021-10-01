@@ -405,11 +405,19 @@
         DraggedCard = selectedCard;
     }
 
+
+    // 將單卡添加到花色牌堆中
+
+    // 當從棄牌或堆疊拖到花色堆時，我們一次只能移動一張牌。
+    // 由於無論卡片來自何處，動作都非常相似，
+    // 我們可以創建通用方法 MoveActiveCard() 將目前添加 DraggedCard 到目標 SuitPile 實例
     private void MoveActiveCard(SuitPile suitPile)
     {
         MoveActiveCard(DraggedCard, suitPile);
     }
 
+    // 然後將其作為 傳遞 MoveActiveCardEvent 給 SuitDiscardPile 實例。
+    // 當卡片被放到花色牌堆上時，該事件被調用。
     private void MoveActiveCard(Card card, SuitPile suitPile)
     {
         if (FirstDiscard != null && FirstDiscard.Suit == card.Suit && FirstDiscard.Value == card.Value)
@@ -423,6 +431,7 @@
 
         StateHasChanged();
     }
+
 
     private void RemoveIfExistsInAnyStack(Card card)
     {
@@ -586,9 +595,10 @@
         {
             List<Card> MoveCards = new List<Card>();
             //Get all cards after the dragged card
+            // sourceStack.Count() 會隨著 sourceStack.Pop() 而變小，不會造成無限迴圈
             while (index < sourceStack.Count())
             {
-                MoveCards.Insert(0, sourceStack.Pop());
+                MoveCards.Insert(0, sourceStack.Pop()); // 在 index 為 0 的位置插入牌
             }
 
             foreach (var card in MoveCards)

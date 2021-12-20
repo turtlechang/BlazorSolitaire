@@ -22,10 +22,11 @@
                                 ClickEvent="Draw" />cardCount -= 13;
                 }
                 @if (DrawDeck.Count == 0)
-                {
+                 {
                     <div class="solitaire-drawdeck" @onclick="ResetDrawPile">
                         <img src="images/solitaire/cardBackGrey.png" />
-                    </div>}
+                    </div>
+                 }
             </div>
         </div>
         <div class="col-2">
@@ -89,17 +90,21 @@
                                                CssClass="solitaire-stackpile"
                                                HandleDragStartEvent="(() => HandleDragStart(card))"
                                                HandleDoubleClickEvent="(() => CardDoubleClick(card))"
-                                               HandleDropEvent="(() => DropCardOntoStack(StackPile1))" /> }
+                                               HandleDropEvent="(() => DropCardOntoStack(StackPile1))" />
+                            }
                             else
                             {
                                 <HiddenCard CssClass="solitaire-stackpile"
-                                            ClickEvent="(() => RevealCard(card, StackPile1))" />}
-                        } }
+                                            ClickEvent="(() => RevealCard(card, StackPile1))" />
+                            }
+                        }
+                    }
                     else
                     {
                         <EmptyStack Pile="StackPile1"
                                     DraggedCard="DraggedCard"
-                                    DropEvent="(() => DropCardOntoStack(StackPile1))" />}
+                                    DropEvent="(() => DropCardOntoStack(StackPile1))" />
+                    }
                 </div>
                 <div class="col-md-4">
                     @if (StackPile2.Any())
@@ -255,20 +260,20 @@
     </div>}
 
 
-@code { //The card the user is currently dragging
+@code { // 使用者目前拖動的卡片
     public Card DraggedCard { get; set; }
 
     public GameStatus Status { get; set; } = GameStatus.NotStarted;
 
-    //The three discarded cards being shown to the user.
-    //FirstDiscard is the topmost of these cards.
+    // 向使用者顯示的三張棄牌。
+    // FirstDiscard 是這些棄牌的最上面。
     public Card FirstDiscard { get; set; }
     public Card SecondDiscard { get; set; }
     public Card ThirdDiscard { get; set; }
 
     CardDeck DrawDeck = new CardDeck();
 
-    //All discarded cards not shown to the user.
+    // 未向使用者顯示的所有棄牌。
     DiscardPile DiscardPile = new DiscardPile();
 
     SuitPile ClubsPile = new SuitPile(CardSuit.Clubs);
@@ -276,7 +281,7 @@
     SuitPile SpadesPile = new SuitPile(CardSuit.Spades);
     SuitPile HeartsPile = new SuitPile(CardSuit.Hearts);
 
-    //Stack piles are numbered from left to right (1 is leftmost).
+    // 7 個牌堆從左到右編號（最左邊是 1）。
     StackPile StackPile1 = new StackPile();
     StackPile StackPile2 = new StackPile();
     StackPile StackPile3 = new StackPile();
@@ -287,25 +292,25 @@
 
     public void NewGame()
     {
-        //Set the game status to Playing
+        // 將游戲狀態設置為 Playing
         Status = GameStatus.Playing;
 
-        //Create a new draw deck and discard pile
+        // 創建一個新的抽牌組和棄牌堆
         DrawDeck = new CardDeck();
         DiscardPile = new DiscardPile();
 
-        //Reset the discards
+        // 重置三張棄牌的初始值
         FirstDiscard = null;
         SecondDiscard = null;
         ThirdDiscard = null;
 
-        //Create new suit piles
+        // 創建新的花色堆
         ClubsPile = new SuitPile(CardSuit.Clubs);
         DiamondsPile = new SuitPile(CardSuit.Diamonds);
         SpadesPile = new SuitPile(CardSuit.Spades);
         HeartsPile = new SuitPile(CardSuit.Hearts);
 
-        //Create new stacks
+        // 創建 7 個新的牌堆
         StackPile1 = new StackPile();
         StackPile2 = new StackPile();
         StackPile3 = new StackPile();
@@ -314,7 +319,7 @@
         StackPile6 = new StackPile();
         StackPile7 = new StackPile();
 
-        //Deal cards to the stacks
+        // 發牌到牌堆
         StackPile1.Add(DrawDeck.Draw());
         StackPile2.Add(DrawDeck.DrawHidden());
         StackPile3.Add(DrawDeck.DrawHidden());
@@ -355,51 +360,54 @@
 
     public void Draw()
     {
-        //If the bottommost discard is there...
+        // 如果有第三張棄牌的話
         if (ThirdDiscard != null)
-            DiscardPile.Add(ThirdDiscard); //Add it to the discard pile
+            DiscardPile.Add(ThirdDiscard); // 把第三張棄牌加入棄牌堆(DiscardPile)
 
-        //If the middle discard is there...
+        // 如果有第二張棄牌的話
         if (SecondDiscard != null)
-            ThirdDiscard = SecondDiscard; //Make it the bottommost
+            ThirdDiscard = SecondDiscard; // 把第二張棄牌放在最底層(第三張棄牌)
 
-        //If the topmost discard is there...
+        // 如果有第一張棄牌的話
         if (FirstDiscard != null)
-            SecondDiscard = FirstDiscard; //Make it the middle discard
+            SecondDiscard = FirstDiscard; // 讓第一張棄牌成為第二張棄牌
 
-        //Set the topmost discard to the top card of the draw pile
+        // 將抽牌堆的最上面抽一張牌設為第一張棄牌
         FirstDiscard = DrawDeck.Draw();
 
-        //Let Blazor know to update the display
+        // 讓 Blazor 知道更新顯示
         StateHasChanged();
     }
 
+    // 如果沒有更多的牌可以抽，使用者可以執行不同的操作 ResetDrawPile()
     public void ResetDrawPile()
     {
-        //First, add all three discards to the discard pile.
+        // 首先，將所有三張棄牌加入棄牌堆。
         DiscardPile.Add(ThirdDiscard);
         DiscardPile.Add(SecondDiscard);
         DiscardPile.Add(FirstDiscard);
 
-        //Get all cards in the discard pile
+        // 獲得棄牌堆中的所有牌
         var allCards = DiscardPile.GetAll();
 
-        //Put your thing down, flip it and reverse it
+        // 反轉 allCards 項目的順序
         allCards.Reverse();
 
-        //Add them back to the draw pile
+        // 將它們添加回到抽牌堆
         foreach (var card in allCards)
         {
             DrawDeck.Add(card);
         }
 
-        //Reset the discards and discard pile
+        // 重置三張棄牌和棄牌堆
         FirstDiscard = null;
         SecondDiscard = null;
         ThirdDiscard = null;
         DiscardPile = new DiscardPile();
     }
 
+    // 當開始拖動卡片時，我們必須設置 Blazor 組件的 DraggedCard 屬性，
+    // Solitaire 然後將其過濾到其他需要它的組件中，例如 DraggableCard.
     public void HandleDragStart(Card selectedCard)
     {
         DraggedCard = selectedCard;
@@ -444,6 +452,8 @@
         StackPile7.RemoveIfExists(card);
     }
 
+    // 如果拖動的卡片可以放在這個牌堆上的話
+    // 則從那三張棄牌中移除拖動的卡片。
     private void RemoveFromDiscards(Card card)
     {
         if (FirstDiscard != null && FirstDiscard.Suit == card.Suit && FirstDiscard.Value == card.Value)
@@ -453,6 +463,7 @@
         }
     }
 
+    // 把三張棄牌的順序上移
     private void MoveUpDiscards()
     {
         FirstDiscard = SecondDiscard;
@@ -461,6 +472,8 @@
         ThirdDiscard = DiscardPile.Pop();
     }
 
+    // 如果拖動的卡片可以放在這個牌堆上的話
+    // 則從花色堆中移除拖動的卡片。
     private void RemoveFromSuitPiles(Card card)
     {
         HeartsPile.RemoveIfExists(card);
@@ -469,21 +482,22 @@
         SpadesPile.RemoveIfExists(card);
     }
 
+    // 雙擊卡牌移動到花色堆
     public void CardDoubleClick(Card card)
     {
-        SuitPile selectedPile = ClubsPile;
+        SuitPile selectedPile = ClubsPile;   // 梅花
         switch (card.Suit)
         {
             case CardSuit.Diamonds:
-                selectedPile = DiamondsPile;
+                selectedPile = DiamondsPile; // 方塊
                 break;
 
             case CardSuit.Spades:
-                selectedPile = SpadesPile;
+                selectedPile = SpadesPile;   // 黑桃
                 break;
 
             case CardSuit.Hearts:
-                selectedPile = HeartsPile;
+                selectedPile = HeartsPile;   // 愛心
                 break;
         }
 
@@ -491,6 +505,7 @@
         CheckMoveCardToSuitPile(card, selectedPile);
     }
 
+    // 檢查是否能移動卡牌到花色堆
     private void CheckMoveCardToSuitPile(Card card, SuitPile suitPile)
     {
         if (suitPile.Suit == card.Suit && suitPile.AllowedValue == card.Value)
@@ -499,13 +514,19 @@
         }
     }
 
+    // 現在，當我們點擊面朝下的卡片時，我們將“翻轉”卡片並使其正面朝上
     public async Task RevealCard(Card card, StackPile pile)
     {
-        var lastPileCard = pile.Last();
+        var lastPileCard = pile.Last(); // 牌堆最後一張卡片
+
+        // 如果點擊的卡片的花色與數字是等於牌堆最後一張卡片的花色與數字的話，
+        // 就把牌堆最後一張卡片改成可以顯示
         if (lastPileCard.Suit == card.Suit && lastPileCard.Value == card.Value)
         {
             lastPileCard.IsVisible = true;
         }
+
+        // 自動完成
         await AutoComplete();
     }
 
@@ -513,11 +534,11 @@
     {
 
 
-        //Get the topmost card of the target stack
+        // 獲取目標牌堆最上面的牌
         var card = targetStack.Last();
 
         bool canStack = false;
-        if (card == null) //No cards on the stack, we can only allow kings
+        if (card == null) // 牌堆中沒有任何卡，我們只能允許 King 國王能放下
         {
             //If the stack is empty, dragged card can only be placed
             //if it is a King.
@@ -531,14 +552,14 @@
             bool isOneLessThan
                 = (int)DraggedCard.Value == (((int)card.Value) - 1);
 
-            //Dragged card can be stacked if it is the opposite color
-            //and one less rank from the current top card of the stack.
+            // 如果被拖動卡片的顏色與目標牌堆的最上面牌的顏色相反，
+            // 而且比目標牌堆最上面牌少一個等級的話，則可以堆疊。
             canStack = isOneLessThan && isOppositeColor;
         }
 
         if (canStack)
         {
-            //Determine the stack the card came from
+            // 確定卡片來自的牌堆
             StackPile sourceStack = null;
             if (StackPile7.Contains(DraggedCard))
                 sourceStack = StackPile7;
@@ -555,26 +576,26 @@
             else if (StackPile1.Contains(DraggedCard))
                 sourceStack = StackPile1;
 
-            //If the card came from a stack, move the card's stack
+            // 如果卡片來自牌堆，則移動卡片的牌堆
             if (sourceStack != null)
             {
                 MoveCardStack(targetStack, sourceStack);
             }
 
-            //If the card came from discards, remove it from there
-            //and add it to the target stack
+            // 如果該卡牌來自棄牌，則將其從那裡移除
+            // 並將其添加到目標牌堆
             if (DraggedCard == FirstDiscard)
             {
                 RemoveFromDiscards(DraggedCard);
                 targetStack.Add(DraggedCard);
             }
 
-            //If the card came from the suit piles, remove it from
-            //the suit pile and add it to the stack.
+            // 如果卡片來自花色堆，
+            // 則將其從花色堆移除並添加到牌堆中。
             if (ClubsPile.Contains(DraggedCard)
-                || DiamondsPile.Contains(DraggedCard)
-                || SpadesPile.Contains(DraggedCard)
-                || HeartsPile.Contains(DraggedCard))
+            || DiamondsPile.Contains(DraggedCard)
+            || SpadesPile.Contains(DraggedCard)
+            || HeartsPile.Contains(DraggedCard))
             {
                 RemoveFromSuitPiles(DraggedCard);
                 targetStack.Add(DraggedCard);
@@ -582,19 +603,20 @@
 
         }
 
-        //Refresh the interface
+        // 刷新介面
         StateHasChanged();
         await AutoComplete();
     }
 
+    // 從來源牌堆移動到目標牌堆
     private void MoveCardStack(StackPile targetStack, StackPile sourceStack)
     {
-        //Check if any cards exist *lower* than dragged card
+        // 檢查是否有任何卡片存在*低於*拖動的卡片
         var index = sourceStack.IndexOf(DraggedCard);
         if (sourceStack.Count() >= index)
         {
             List<Card> MoveCards = new List<Card>();
-            //Get all cards after the dragged card
+            // 獲取拖卡後的所有卡
             // sourceStack.Count() 會隨著 sourceStack.Pop() 而變小，不會造成無限迴圈
             while (index < sourceStack.Count())
             {
@@ -608,6 +630,10 @@
         }
     }
 
+    // 自動完成的條件:
+    // 抽牌堆中沒有更多牌。
+    // 棄牌中沒有更多牌。
+    // 堆疊中沒有隱藏的卡片
     private async Task AutoComplete()
     {
         if (StackPile1.HasNoHiddenCards()
@@ -637,15 +663,19 @@
         }
     }
 
+
     public async Task CheckMoveStackTopCard(StackPile stackPile)
     {
+        // 獲得牌堆頂牌
         var card = stackPile.Last();
-        if (card != null)
+        if (card != null) // 如果頂牌不為空
         {
+            // 如果可能，將最上面的牌移到正確的花色堆中。
             CheckMoveCardToSuitPile(card, ClubsPile);
             CheckMoveCardToSuitPile(card, DiamondsPile);
             CheckMoveCardToSuitPile(card, SpadesPile);
             CheckMoveCardToSuitPile(card, HeartsPile);
         }
         await Task.Delay(100);
-    } }
+    }
+}

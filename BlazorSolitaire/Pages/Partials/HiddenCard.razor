@@ -1,4 +1,10 @@
-﻿<div class="@CssClass" @onclick="ClickEvent">
+﻿@* 在紙牌中，有“隱藏”牌（具有花色和價值但不向用戶顯示的牌，例如“面朝下”的牌）。
+   這些可能包括抽牌堆中的牌，以及尚未顯示的牌堆中的牌。
+
+   因此，我們將創建一個 Razor 組件 HiddenCard 來表示這些卡片：*@
+
+
+<div class="@CssClass" @onclick="ClickEvent">
     <img src="images/solitaire/cardBack.png" />
 </div>
 

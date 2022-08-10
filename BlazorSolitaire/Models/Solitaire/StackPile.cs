@@ -7,7 +7,7 @@ namespace BlazorSolitaire.Models.Solitaire
 {
     // Stacks 牌堆區必須確保：
     // 卡片按照交替顏色放置，例如: 黑-紅-黑-紅-黑
-    // 卡片按照降序排列，例如: Jack-19-8-7
+    // 卡片按照降序排列，例如: Jack-10-9-8-7
     // 只有 King 國王可以放置在空牌堆上。
 
     // 最難實現的功能是：

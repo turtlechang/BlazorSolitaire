@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BlazorSolitaire.Models.Solitaire
 {
-    public class PileBase
+    public class PileBase : BlazorSolitaire.Models.Core.IPile
     {
         // 請注意，我們收集的卡片 PileBase 是 List<Card>，
         // 而不是 Stack<Card>，因為 List<Card> 更容易於交互。
@@ -57,6 +57,31 @@ namespace BlazorSolitaire.Models.Solitaire
         public bool Contains(Card card)
         {
             return Cards.Any(x => x.Suit == card.Suit && x.Value == card.Value);
+        }
+        public void Add(Models.Core.ICard card)
+        {
+            if (card is Card c)
+            {
+                Add(c);
+            }
+        }
+
+        public void Remove(Models.Core.ICard card)
+        {
+             if (card is Card c)
+             {
+                 RemoveIfExists(c);
+             }
+        }
+
+        public void Clear()
+        {
+            Cards.Clear();
+        }
+
+        public IEnumerable<Models.Core.ICard> GetAll()
+        {
+            return Cards.Cast<Models.Core.ICard>();
         }
     }
 }

@@ -1,0 +1,104 @@
+@using BlazorSolitaire.Models.Core
+@using BlazorSolitaire.Models.BigTwo
+
+<div class="table-center">
+    <div class="logo-area">
+        <h1 class="game-title">大老二</h1>
+        @if (PlayedCards != null && PlayedCards.Any())
+        {
+            <div class="played-cards">
+                @foreach (var card in PlayedCards)
+                {
+                    if (card is BigTwoCard bigTwoCard)
+                    {
+                        <img src="images/common/@(bigTwoCard.ImageName).png" class="card-display" />
+                    }
+                }
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(StatusMessage))
+        {
+             <p class="game-status" style="@(PlayedCards != null && PlayedCards.Any() ? "position: absolute; bottom: 20%; font-size: 1.5rem;" : "")">
+                 @StatusMessage
+             </p>
+        }
+        else if (PlayedCards == null || !PlayedCards.Any())
+        {
+             <p class="game-status">準備開始</p>
+        }
+    </div>
+</div>
+
+<style>
+    .table-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60%;
+        height: 40%;
+        border-radius: 200px;
+        border: 2px solid rgba(255,255,255,0.1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1;
+        pointer-events: none; /* Let clicks pass through if needed */
+    }
+
+    .game-title {
+        color: rgba(255,255,255,0.15);
+        font-size: 5rem; /* Slightly larger */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        text-align: center;
+        margin: 0;
+        z-index: -1;
+        font-family: 'KaiTi', 'SimKai', serif;
+        white-space: nowrap;
+    }
+
+    .played-cards {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2;
+    }
+
+    .card-display {
+        width: 110px; /* Slightly larger cards */
+        margin-left: -70px;
+        box-shadow: 2px 5px 15px rgba(0,0,0,0.5);
+        border-radius: 8px;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .card-display:first-child {
+        margin-left: 0;
+    }
+
+    .card-display:hover {
+        transform: translateY(-15px) scale(1.1);
+        z-index: 100;
+    }
+
+    .game-status {
+        color: rgba(255,255,255,0.9);
+        font-size: 2rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        font-weight: 300;
+        letter-spacing: 2px;
+        text-align: center;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public IEnumerable<ICard> PlayedCards { get; set; }
+    
+    [Parameter]
+    public string StatusMessage { get; set; }
+}
